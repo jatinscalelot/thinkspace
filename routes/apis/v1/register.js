@@ -8,6 +8,7 @@ let mongoose = require('mongoose');
 router.post('/', async (req, res) => {
     const { fullname, email, password } = req.body;
     if(fullname && fullname.trim() != ''  && email && email.trim() != '' && password && password.trim() != ''){
+        let name = fullname.split(" ");
         if(password.trim().length > 5){
             if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
                 let primary = mongoConnection.useDb(constants.DEFAULT_DB);
@@ -15,8 +16,8 @@ router.post('/', async (req, res) => {
                 if(checkForExisting == null){
                     await primary.model(constants.MODELS.users, usersModel).create({ 
                         fullname : fullname,
-                        firstname : '',
-                        lastname : '',
+                        firstname : (name[0]) ? name[0] : '',
+                        lastname : (name[1]) ? name[1] : '',
                         mobilenumber : '',
                         email : email,
                         password : password
